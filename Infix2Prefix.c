@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 typedef struct {
     char *data;
@@ -77,27 +78,34 @@ char* StringReverse(char *str) {
 
 char* infixToPrefix(char *infix) {
     int i, j;
+    infix = StringReverse(infix);
     int len = strlen(infix);
     char *prefix = (char*)malloc(sizeof(char) * (len + 1));
     Stack *s = initStack(len);
 
-    for (i = len - 1, j = 0; i >= 0; i--) {
-        if (infix[i] == ')') {
-            push(s, infix[i]);
-        } else if (infix[i] == '(') {
-            while (peek(s) != ')') {
-                prefix[j++] = pop(s);
-            }
+    for (i = 0, j = 0; i < len; i++) {
+        if (infix[i] == '(') {
+            infix[i] = ')';
+        } else if (infix[i] == ')') {
+            infix[i] = '(';
+        }
+    }
 
-            pop(s);
-        } else if (isOperator(infix[i])) {
-            while (s->top != -1 && precedence(peek(s)) >= precedence(infix[i])) {
-                prefix[j++] = pop(s);
-            }
-
+    for (i = 0; i < len; i++) {
+        if (infix[i] == '(') {
             push(s, infix[i]);
-        } else {
+        } else if (isalpha(infix[i]) || isdigit(infix[i])) {
             prefix[j++] = infix[i];
+        } else if (isOperator(infix[i])) {
+            while (s->top != -1 && peek(s) != '(' && precedence(infix[i]) <= precedence(peek(s))) {
+                prefix[j++] = pop(s);
+            }
+            push(s, infix[i]);
+        } else if (infix[i] == ')') {
+            while (s->top != -1 && peek(s) != '(') {
+                prefix[j++] = pop(s);
+            }
+            pop(s);
         }
     }
 
@@ -106,8 +114,6 @@ char* infixToPrefix(char *infix) {
     }
 
     prefix[j] = '\0';
-
-    prefix = StringReverse(prefix);
 
     return prefix;
 }
