@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <stdbool.h>
 
 typedef struct
@@ -91,6 +92,8 @@ char* StringReverse(char *str)
     while (j >= 0) {
         rev[i++] = str[j--];
     }
+
+    rev[i] = '\0';
 
     return rev;
 }
