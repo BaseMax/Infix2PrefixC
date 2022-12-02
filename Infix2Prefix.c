@@ -132,7 +132,7 @@ char* infixToPrefix(char *infix)
         }
     }
 
-    while (s->top != -1) {
+    while (!isEmpty(s)) {
         prefix[j++] = pop(s);
     }
 
