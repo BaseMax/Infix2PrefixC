@@ -63,6 +63,18 @@ int precedence(char c) {
     return -1;
 }
 
+char* StringReverse(char *str) {
+    int len = strlen(str);
+    char *rev = (char*)malloc(sizeof(char) * len);
+
+    for (int i = 0; i < len; i++) {
+        rev[i] = str[len - i - 1];
+    }
+    rev[len] = '\0';
+
+    return rev;
+}
+
 char* infixToPrefix(char *infix) {
     int i, j;
     int len = strlen(infix);
@@ -70,24 +82,16 @@ char* infixToPrefix(char *infix) {
     Stack *s = initStack(len);
 
     for (i = len - 1, j = 0; i >= 0; i--) {
-        if (infix[i] == '(') {
-            infix[i] = ')';
-        } else if (infix[i] == ')') {
-            infix[i] = '(';
-        }
-    }
-
-    for (i = 0; i < len; i++) {
-        if (infix[i] == '(') {
+        if (infix[i] == ')') {
             push(s, infix[i]);
-        } else if (infix[i] == ')') {
-            while (peek(s) != '(') {
+        } else if (infix[i] == '(') {
+            while (peek(s) != ')') {
                 prefix[j++] = pop(s);
             }
 
             pop(s);
         } else if (isOperator(infix[i])) {
-            while (s->top != -1 && precedence(infix[i]) <= precedence(peek(s))) {
+            while (s->top != -1 && precedence(peek(s)) >= precedence(infix[i])) {
                 prefix[j++] = pop(s);
             }
 
@@ -103,11 +107,7 @@ char* infixToPrefix(char *infix) {
 
     prefix[j] = '\0';
 
-    for (i = 0, j = len - 1; i < j; i++, j--) {
-        char temp = prefix[i];
-        prefix[i] = prefix[j];
-        prefix[j] = temp;
-    }
+    prefix = StringReverse(prefix);
 
     return prefix;
 }
