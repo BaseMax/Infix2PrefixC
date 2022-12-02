@@ -1,4 +1,4 @@
-#include <stido.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 char* Infix2Prefix(char* infix)
