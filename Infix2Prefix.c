@@ -114,6 +114,7 @@ char* infixToPrefix(char *infix) {
     }
 
     prefix[j] = '\0';
+    prefix = StringReverse(prefix);
 
     return prefix;
 }
