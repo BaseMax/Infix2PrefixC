@@ -134,8 +134,9 @@ int main(int argc, char** argv)
 
     char* new_infix = malloc(sizeof(char) * 100);
     printf("Enter an infix expression: ");
-    scanf("%s", &new_infix);
-    char* new_prefix = infixToPrefix(infix);
+    scanf("%s", new_infix);
+
+    char* new_prefix = infixToPrefix(new_infix);
     printf("The prefix expression is: %s\n", new_prefix);
 
     return 0;
